@@ -1,3 +1,5 @@
+// src/components/LoginPage.tsx
+
 import React, { useState } from 'react';
 import '../styles/LoginPage.css';
 
@@ -10,7 +12,6 @@ const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    // --- FUNGSI BARU UNTUK MERESET FORMULIR ---
     const resetForm = () => {
         setUsername('');
         setPassword('');
@@ -20,7 +21,13 @@ const LoginPage: React.FC = () => {
         event.preventDefault();
         const dataToSend = { username, password };
 
-        const backendUrl = 'http://localhost:3001/api/simpan-data';
+        // --- PERUBAHAN UTAMA DI SINI ---
+        // 1. Ambil URL API dari environment variable yang disediakan oleh Vite.
+        const apiUrl = import.meta.env.VITE_API_URL;
+        
+        // 2. Gabungkan dengan endpoint spesifik.
+        const backendUrl = `${apiUrl}/api/simpan-data`;
+        // --- AKHIR PERUBAHAN ---
 
         fetch(backendUrl, {
             method: 'POST',
@@ -36,15 +43,12 @@ const LoginPage: React.FC = () => {
             return response.json();
         })
         .then((data: ApiResponse) => {
-            // --- PERUBAHAN UTAMA ADA DI SINI ---
-            console.log('Respons dari server:', data.message); // Tetap catat di console untuk debugging
-            
-            // DARIPADA MENAMPILKAN ALERT, KITA PANGGIL FUNGSI UNTUK MERESET FORMULIR
+            console.log('Respons dari server:', data.message);
             resetForm();
+            alert('Login berhasil! Data telah dikirim.'); // Tambahkan feedback sukses untuk pengguna
         })
         .catch(error => {
             console.error('Terjadi error:', error);
-            // Jika gagal, kita tetap tampilkan alert agar pengguna tahu ada masalah
             alert(`Gagal: ${error.message}`);
         });
     };
@@ -54,6 +58,8 @@ const LoginPage: React.FC = () => {
         alert("Fungsionalitas ini belum diimplementasikan.");
     }
 
+    // ... sisa kode Anda tetap sama ...
+    // (return (...) dan seterusnya)
     return (
         <main className="main-container">
             <div className="content-wrapper">
